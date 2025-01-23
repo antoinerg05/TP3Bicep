@@ -1,11 +1,10 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+#pipeline TP3
 
 trigger:
-- none
- 
+  branches:
+    include:
+      - main  # Déclenche uniquement sur la branche principale
+
 variables:
   serviceConnection : 'SC-TP3'
   resourceGroupName: 'rg-tp3-devops'
@@ -14,24 +13,60 @@ variables:
   webAppName: 'webapp-tp3'
   webAppNameProd : 'webapp-tp3'
   sku: 'TP3'
-
-steps:
-- task: AzureCLI@2
-  inputs:
-    azureSubscription: $(serviceConnection)
-    scriptType: bash
-    scriptLocation: inlineScript
-    inlineScript: |
-      az --version
-      az group create --name $(resourceGroupName) --location $(location)
-      az deployment group create --resource-group $(resourceGroupName) --template-file $(templateFile) --parameters appName=$(webAppName) appSku=$(sku)
-  displayName: 'Environement de Dev'
   
-- task: AzureCLI@2
-  inputs:
-    azureSubscription: $(serviceConnection)
-    scriptType: bash
-    scriptLocation: inlineScript
-    inlineScript: |
-      az deployment group create --resource-group $(resourceGroupName) --template-file $(templateFile) --parameters appName=$(webAppNameProd) appSku=$(sku)
-  displayName: 'Environement de production'
+stages:
+  - stage: Deploy_Dev
+    displayName: Deploy to Dev Environment
+    jobs:
+      - job: DeployToDev
+        displayName: Deploy Resources to Dev
+        pool:
+          vmImage: 'windows-latest'  # Utilise une machine virtuelle Windows
+        steps:
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: 'YOUR_AZURE_SERVICE_CONNECTION'  # Nom de votre service Azure connecté
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                  az --version
+                  az group create --name $(resourceGroupName) --location $(location)
+                  az deployment group create --resource-group $(resourceGroupName) --template-file $(templateFile) --parameters appName=$(webAppName) appSku=$(sku)
+
+  - stage: Deploy_Production
+    displayName: Deploy to Production Environment
+    dependsOn: Deploy_Dev
+    condition: succeeded()
+    jobs:
+      - deployment: DeployToProd
+        displayName: Deploy Resources to Production
+        pool:
+          vmImage: 'windows-latest'  # Utilise une machine virtuelle Windows
+        environment: 'Production'  # Environnement Azure Pipelines
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: AzureCLI@2
+                  inputs:
+                    azureSubscription: 'YOUR_AZURE_SERVICE_CONNECTION'  # Nom de votre service Azure connecté
+                    scriptType: 'bash'
+                    scriptLocation: 'inlineScript'
+                    inlineScript: |
+                        az deployment group create --resource-group $(resourceGroupName) --template-file $(templateFile) --parameters appName=$(webAppNameProd) appSku=$(sku)
+approvals:
+  - stage: Deploy_Production
+    preDeployApprovals:
+      - approvers:
+          - 'rem.gagnon@gmail.com'  # Remplacez par l'email des approbateurs
+        instructions: 'Approve to deploy to Production'
+
+
+
+
+
+
+
+
+
+
