@@ -54,12 +54,6 @@ stages:
                     scriptLocation: 'inlineScript'
                     inlineScript: |
                         az deployment group create --resource-group $(resourceGroupName) --template-file $(templateFile) --parameters appName=$(webAppNameProd) appSku=$(sku)
-approvals:
-  - stage: Deploy_Production
-    preDeployApprovals:
-      - approvers:
-          - 'rem.gagnon@gmail.com'  # Remplacez par l'email des approbateurs
-        instructions: 'Approve to deploy to Production'
 
 
 
