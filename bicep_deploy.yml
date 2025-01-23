@@ -25,7 +25,7 @@ stages:
         steps:
           - task: AzureCLI@2
             inputs:
-              azureSubscription: 'YOUR_AZURE_SERVICE_CONNECTION'  # Nom de votre service Azure connecté
+              azureSubscription: $(serviceConnection)  # Nom de votre service Azure connecté
               scriptType: 'bash'
               scriptLocation: 'inlineScript'
               inlineScript: |
@@ -49,7 +49,7 @@ stages:
               steps:
                 - task: AzureCLI@2
                   inputs:
-                    azureSubscription: 'YOUR_AZURE_SERVICE_CONNECTION'  # Nom de votre service Azure connecté
+                    azureSubscription: $(serviceConnection)  # Nom de votre service Azure connecté
                     scriptType: 'bash'
                     scriptLocation: 'inlineScript'
                     inlineScript: |
