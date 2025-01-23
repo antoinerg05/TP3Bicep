@@ -7,7 +7,7 @@ trigger:
 - none
  
 variables:
-  serviceConnection : '6fb99ec1-4308-4a2f-bca1-ccdab1dfcb07'
+  serviceConnection : 'SC-TP3'
   resourceGroupName: 'rg-tp3-devops'
   location: 'canadacentral'
   templateFile: '**/main.bicep'
