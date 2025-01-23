@@ -7,7 +7,7 @@ trigger:
 - none
  
 variables:
-  serviceConnection : 'sc-azure'
+  serviceConnection : 'Azure for Students'
   resourceGroupName: 'rg-tp3-devops'
   location: 'canadacentral'
   templateFile: '**/main.bicep'
