@@ -1,62 +1,106 @@
-param location string
-param appServicePlanName string
-param appServices array
-
+param spName string
 @allowed([
-  'Non' // Pas de mise à l’échelle
-  'Manuel' // Mise à l’échelle manuelle
-  'Auto' // Mise à l’échelle automatique
+    'canadaeast'
+    'canadacentral'
 ])
-param MiseAEchelle string = 'Non'
+param location string
+param webAppNames array
+param spSku string
 
-// Déterminer le SKU en fonction de MiseAEchelle
-var skuName = (MiseAEchelle == 'Non') ? 'F1' : (MiseAEchelle == 'Manuel') ? 'B1' : 'S1'
-var skuTier = (MiseAEchelle == 'Non') ? 'Free' : (MiseAEchelle == 'Manuel') ? 'Basic' : 'Standard'
-
-// Plan de service pour MVC
-resource appServicePlan 'Microsoft.Web/serverfarms@2021-02-01' = {
-  name: appServicePlanName
+resource servicePlan 'Microsoft.Web/serverfarms@2024-04-01' = {
+  name: 'sp-${spName}'
   location: location
-  sku: {
-    name: skuName
-    tier: skuTier
+  sku:{
+    name: spSku
+  }
+  tags:{
+    name: 'Application'
+    value: spName
   }
 }
-var uniqueSuffix = uniqueString(resourceGroup().id)
 
-// Plan de service pour API
-resource appServiceApp 'Microsoft.Web/sites@2021-02-01' = [for (appService, index) in appServices: {
-  name: '${appService.name}-${uniqueSuffix}'
+resource webApp 'Microsoft.Web/sites@2024-04-01' = [for webAppName in webAppNames: {
+  name: 'webapp-${webAppName}-${uniqueString(resourceGroup().id)}'
   location: location
-  sku: {
-    name: skuName
-    tier: skuTier
-  }
   properties: {
-    serverFarmId: appServicePlan.id
+    serverFarmId:servicePlan.id
+  }
+  tags:{
+    name: 'Application'
+    value: webAppName
   }
 }]
 
-
-// Slots de staging (uniquement pour mise à l’échelle automatique)
-/*resource mvcSlot 'Microsoft.Web/sites/slots@2021-02-01' = if (MiseAEchelle == 'Auto') {
-  parent: appServiceApp1
-  name: 'staging'
+resource stagingSlot 'Microsoft.Web/sites/slots@2024-04-01' = [for i in range(0, length(webAppNames)) : if(spSku == 'S1'){
+  name: '${webApp[i].name}-staging'
+  parent: webApp[i]
   location: location
   properties: {
-    serverFarmId: appServicePlan.id
+      serverFarmId:servicePlan.id
   }
-}
+  tags:{
+    name: 'Application'
+    value: '${webApp[i].name}-staging'
+  }
+}]
 
-resource apiSlot 'Microsoft.Web/sites/slots@2021-02-01' = if (MiseAEchelle == 'Auto') {
-  parent: appServiceApp2
-  name: 'staging'
+resource scaling 'Microsoft.Insights/autoscalesettings@2022-10-01' =  if(spSku == 'S1') {
+  name: '${servicePlan.name}-scale'
   location: location
   properties: {
-    serverFarmId: appServicePlan.id
+    enabled: true
+    targetResourceUri: servicePlan.id
+    profiles: [
+      {
+        name: 'ConditionAugmentation'
+        capacity:{
+          minimum: '1'
+          maximum: '4'
+          default: '1'
+        }
+        rules: [
+          {
+            scaleAction: {
+              type: 'ChangeCount'
+              direction: 'Increase'
+              cooldown: 'PT5M'
+              value: '1'
+            }
+            metricTrigger: {
+              metricName: 'CpuPercentage'
+              operator: 'GreaterThan'
+              timeAggregation: 'Average'
+              threshold: 70
+              metricResourceUri: servicePlan.id
+              timeWindow: 'PT10M'
+              timeGrain: 'PT1M'
+              statistic: 'Average'
+            }
+          }
+          {
+            scaleAction: {
+              type: 'ChangeCount'
+              direction: 'Decrease'
+              cooldown: 'PT5M'
+              value: '1'
+            }
+            metricTrigger: {
+              metricName: 'CpuPercentage'
+              operator: 'LessThanOrEqual'
+              timeAggregation: 'Average'
+              threshold: 50
+              metricResourceUri: servicePlan.id
+              timeWindow: 'PT10M'
+              timeGrain: 'PT1M'
+              statistic: 'Average'
+            }
+          }
+        ]
+      }
+    ]
+  }
+  tags:{
+    name: 'Application'
+    value: '${servicePlan.name}-scale'
   }
 }
-*/
-// Sorties
-//output app1Url string = 'https://${appServiceApp1.properties.defaultHostName}'
-//output app2Url string = 'https://${appServiceApp2.properties.defaultHostName}'

@@ -1,97 +1,71 @@
 @allowed([
-  'dev'
-  'production'
+    'canadaeast'
+    'canadacentral'
 ])
-param environmentType string = 'dev'
-param location string = 'canadacentral'
-param sqlAdminUser string = 'adminuser'
+param location string
+
+param sqlServerName string
+
+param sqlAdminLogin string
+
+@minLength(10)
+@maxLength(20)
 @secure()
 param sqlAdminPassword string
 
+param storageName string
 
-param appPrefixs array = [
-'webapp-tp2-bt-mvc'
-'webapp-tp2-api'
+var apps = [
+    {
+        spName: 'tardi1'
+        webApps: ['mvc', 'apiinteret']
+        miseAEchelle: 'Auto'
+    }
+    {
+        spName: 'tardi2'
+        webApps: [ 'apiassurance', 'apicredit']
+        miseAEchelle: 'Non'
+    }
 ]
 
-param servicePlans array = [
-  {
-    name: 'sp-tp2-bt-mvc'
-    appServices: [
-        {
-            name: 'webapp-tp2-bt-mvc'
-            MiseAEchelle: 'Auto'
-        }
-        {
-            name: 'webapp-tp2-api-calcul-int'
-             MiseAEchelle: 'Non'
-        }
-    ]
-  }
-  {
-    name: 'sp-tp2-api'
-    appServices: [
-        {
-            name: 'webapp-tp2-api-assurance'
-            MiseAEchelle: 'Non'
-        }
-        {
-            name: 'webapp-tp2-api-carte-credit'
-            MiseAEchelle : 'Manuel'
-        }
-    ]
-  }
-]
+var skuMap = {
+    Non: 'F1'
+    Manuel: 'B1'
+    Auto: 'S1'
+}
 
+var databaseNames = [ 'mvc', 'assurance', 'cartecredits']
 
-// Noms des ressources
-var sqlServerName = 'sql-tp2-server'
-var sqlDbMvcName = 'db-tp2-bt-mvc'
-var sqlDbApiName = 'db-tp2-api'
-var storageAccountName = 'sttp2storage'
-
-// D�terminer le niveau de mise � l��chelle
-var MiseAEchelle = (environmentType == 'prod') ? 'Auto' : 'Non'
-
-// Module App Service
-module appService './modules/appservice.bicep'  = [for (servicePlan, index) in servicePlans: {
-  name: '${index}-deployAppService'
-  params: {
-    location: location
-    appServicePlanName: servicePlan.name
-    appServices: servicePlan.appservices
-  }
+module appService 'modules/appService.bicep' = [ for app in apps: {
+    name: 'appService${app.spName}'
+    params: {
+        location: location
+        spName: app.spName
+        webAppNames: app.webApps
+        spSku: skuMap[app.miseAEchelle]
+    }
 }]
 
-// Module SQL
-module sql './modules/sql.bicep' = {
-  name: 'deploySql'
-  params: {
-    location: location
-    sqlServerName: sqlServerName
-    sqlAdminUser: sqlAdminUser
-    sqlAdminPassword: sqlAdminPassword
-    sqlDbMvcName: sqlDbMvcName
-    sqlDbApiName: sqlDbApiName
-  }
+module sqldatabase 'modules/sqldatabase.bicep' = {
+    name: 'sqldatabase${sqlServerName}'
+    params: {
+        sqlServerName: sqlServerName
+        databaseNames: databaseNames
+        location: location
+        sqlAdminLogin: sqlAdminLogin
+        sqlAdminPassword: sqlAdminPassword
+        DTUmin: 5
+        DTUmax: 5
+        startIpAddress: '0.0.0.0'
+        endIpAddress: '255.255.255.255'
+    }
 }
 
-// Module Storage
-module storage './modules/storage.bicep' = {
-  name: 'deployStorage'
-  params: {
-    location: location
-    storageAccountName: storageAccountName
-  }
+module storageService 'modules/storage.bicep' = {
+    name: 'storageService_${storageName}'
+     params: {
+         storageName: storageName
+          location: location
+          storageSku: 'Standard_ZRS'
+     }
 }
-
-// Sorties
-//output appServicePlanMvc string = appServicePlanMvcName
-//output appServicePlanApi string = appServicePlanApiName
-//output mvcAppUrl string = appService.outputs.mvcAppUrl
-//output apiAppUrl string = appService.outputs.apiAppUrl
-//output sqlServer string = sqlServerName
-//output sqlDbMvc string = sqlDbMvcName
-//output sqlDbApi string = sqlDbApiName
-//output storageAccount string = storageAccountName
-//output storageContainerUrl string = storage.outputs.containerUrl
