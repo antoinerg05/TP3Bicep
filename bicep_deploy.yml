@@ -9,7 +9,7 @@ variables:
   serviceConnection : 'SC-TP3'
   resourceGroupName: 'TP3'
   location: 'canadacentral'
-  templateFile: './main.bicep'
+  templateFile: 'main.bicep'
   webAppName: 'webapp-tp3'
   webAppNameProd : 'webapp-tp3'
   sqlServerName : 'tp3-sql'
@@ -33,6 +33,7 @@ stages:
               scriptLocation: 'inlineScript'
               inlineScript: |
                   az --version
+                  echo "System.DefaultWorkingDirectory = $(System.DefaultWorkingDirectory)"
                   az group create --name $(resourceGroupName) --location $(location)
                   az deployment group create --resource-group $(resourceGroupName) --template-file $(templateFile) --parameters location=$(location) sqlServerName=$(sqlServerName) sqlAdminLogin=$(sqlAdminLogin) sqlAdminPassword=$(sqlAdminPassword) storageName=$(storageName)
 
