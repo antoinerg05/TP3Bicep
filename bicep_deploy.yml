@@ -50,6 +50,10 @@ stages:
           runOnce:
             deploy:
               steps:
+                - task: Debugpath
+                  script: echo "System.DefaultWorkingDirectory = $(System.DefaultWorkingDirectory)"
+                  displayName: "Debug Working Directory"
+
                 - task: AzureCLI@2
                   inputs:
                     azureSubscription: $(serviceConnection)  # Nom de votre service Azure connecté
