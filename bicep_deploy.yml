@@ -30,6 +30,8 @@ stages:
           runOnce:
             deploy:
               steps:
+                - script: dir "$(System.DefaultWorkingDirectory)"  # Debug: List files in the working directory
+                  displayName: "Debug: List files in the working directory"
                 - task: AzureCLI@2
                   inputs:
                     azureSubscription: $(serviceConnection)  # Nom de votre service Azure connecté
@@ -40,7 +42,7 @@ stages:
                         echo "System.DefaultWorkingDirectory = $(System.DefaultWorkingDirectory)"
                         echo "System.DefaultWorkingDirectory2 = $(System.DefaultWorkingDirectory)"
                         az group create --name $(resourceGroupName) --location $(location)
-                        az deployment group create --resource-group $(resourceGroupName) --template-file main.bicep --parameters location=$(location) sqlServerName=$(sqlServerName) sqlAdminLogin=$(sqlAdminLogin) sqlAdminPassword=$(sqlAdminPassword) storageName=$(storageName)
+                        az deployment group create --resource-group $(resourceGroupName) --template-file $(System.DefaultWorkingDirectory)/main.bicep --parameters location=$(location) sqlServerName=$(sqlServerName) sqlAdminLogin=$(sqlAdminLogin) sqlAdminPassword=$(sqlAdminPassword) storageName=$(storageName)
 
   - stage: Deploy_Production
     displayName: Deploy to Production Environment
