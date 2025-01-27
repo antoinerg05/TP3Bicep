@@ -41,8 +41,8 @@ module appService 'modules/appService.bicep' = [ for app in apps: {
     name: 'appService${app.spName}'
     params: {
         location: location
-        spName:  '$(app.spName)-$(env)' 
-        webAppNames: '$(app.webApps)-$(env)'
+        spName:  '${app.spName}-${env}' 
+        webAppNames: '${app.webApps}-${env}'
         spSku: skuMap[app.miseAEchelle]
     }
 }]
@@ -50,7 +50,7 @@ module appService 'modules/appService.bicep' = [ for app in apps: {
 module sqldatabase 'modules/sqldatabase.bicep' = {
     name: 'sqldatabase${sqlServerName}'
     params: {
-        sqlServerName: '$(sqlServerName)-$(env)'
+        sqlServerName: '${sqlServerName}-${env}'
         databaseNames: databaseNames
         location: location
         sqlAdminLogin: sqlAdminLogin
@@ -65,7 +65,7 @@ module sqldatabase 'modules/sqldatabase.bicep' = {
 module storageService 'modules/storage.bicep' = {
     name: 'storageService_${storageName}'
      params: {
-         storageName: '$(storageName)-$(env)'
+         storageName: '${storageName}-${env}'
           location: location
           storageSku: 'Standard_ZRS'
      }
