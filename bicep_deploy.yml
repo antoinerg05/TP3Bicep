@@ -38,7 +38,7 @@ stages:
                     inlineScript: |
                         az --version
                         echo "System.DefaultWorkingDirectory = $(System.DefaultWorkingDirectory)"
-                        echo dir $(System.DefaultWorkingDirectory)
+                        dir "$(System.DefaultWorkingDirectory)"
                         az group create --name $(resourceGroupName) --location $(location)
                         az deployment group create --resource-group $(resourceGroupName) --template-file main.bicep --parameters location=$(location) sqlServerName=$(sqlServerName) sqlAdminLogin=$(sqlAdminLogin) sqlAdminPassword=$(sqlAdminPassword) storageName=$(storageName)
 
