@@ -15,7 +15,7 @@ variables:
   sqlServerName : 'tp3-sql'
   sqlAdminLogin : 'tp3-admin'
   sqlAdminPassword : 'root'
-  sku: 'TP3'
+  storageName: 'TP3'
   
 stages:
   - stage: Deploy_Dev
@@ -34,7 +34,7 @@ stages:
               inlineScript: |
                   az --version
                   az group create --name $(resourceGroupName) --location $(location)
-                  az deployment group create --resource-group $(resourceGroupName) --template-file $(templateFile) --parameters location=$(location) sqlServerName=$(sqlServerName) sqlAdminLogin=$(sqlAdminLogin) sqlAdminPassword=$(sqlAdminPassword)
+                  az deployment group create --resource-group $(resourceGroupName) --template-file $(templateFile) --parameters location=$(location) sqlServerName=$(sqlServerName) sqlAdminLogin=$(sqlAdminLogin) sqlAdminPassword=$(sqlAdminPassword) storageName=$(storageName)
 
                   param location string
 
