@@ -7,7 +7,7 @@ trigger:
 
 variables:
   serviceConnection : 'SC-TP3'
-  resourceGroupName: 'rg-tp3-devops'
+  resourceGroupName: 'TP3'
   location: 'canadacentral'
   templateFile: './main.bicep'
   webAppName: 'webapp-tp3'
