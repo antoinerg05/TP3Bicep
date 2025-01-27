@@ -9,7 +9,7 @@ variables:
   serviceConnection : 'SC-TP3'
   resourceGroupName: 'TP3'
   location: 'canadacentral'
-  templateFile: './**/main.bicep'
+  templateFile: './main.bicep'
   webAppName: 'webapp-tp3'
   webAppNameProd : 'webapp-tp3'
   sqlServerName : 'tp3-sql'
