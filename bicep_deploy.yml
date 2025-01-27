@@ -40,7 +40,7 @@ stages:
                         echo "System.DefaultWorkingDirectory = $(System.DefaultWorkingDirectory)"
                         echo "System.DefaultWorkingDirectory2 = $(System.DefaultWorkingDirectory)"
                         az group create --name $(resourceGroupName) --location $(location)
-                        az deployment group create --resource-group $(resourceGroupName) --template-file **/main.bicep --parameters location=$(location) sqlServerName=$(sqlServerName) sqlAdminLogin=$(sqlAdminLogin) sqlAdminPassword=$(sqlAdminPassword) storageName=$(storageName)
+                        az deployment group create --resource-group $(resourceGroupName) --template-file main.bicep --parameters location=$(location) sqlServerName=$(sqlServerName) sqlAdminLogin=$(sqlAdminLogin) sqlAdminPassword=$(sqlAdminPassword) storageName=$(storageName)
 
   - stage: Deploy_Production
     displayName: Deploy to Production Environment
@@ -64,7 +64,7 @@ stages:
                     inlineScript: |
                         echo "System.DefaultWorkingDirectory = $(System.DefaultWorkingDirectory)"
                         az group create --name $(resourceGroupName) --location $(location)
-                        az deployment group create --resource-group $(resourceGroupName)  --template-file **/main.bicep --parameters location=$(location) sqlServerName=$(sqlServerName) sqlAdminLogin=$(sqlAdminLogin) sqlAdminPassword=$(sqlAdminPassword) storageName=$(storageName)
+                        az deployment group create --resource-group $(resourceGroupName)  --template-file main.bicep --parameters location=$(location) sqlServerName=$(sqlServerName) sqlAdminLogin=$(sqlAdminLogin) sqlAdminPassword=$(sqlAdminPassword) storageName=$(storageName)
 
 
 
