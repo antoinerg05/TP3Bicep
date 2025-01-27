@@ -57,7 +57,7 @@ stages:
                     scriptLocation: 'inlineScript'
                     inlineScript: |
                         az group create --name $(resourceGroupName) --location $(location)
-                        az deployment group create --resource-group $(resourceGroupName) --template-file $(templateFile) --parameters location=$(location) sqlServerName=$(sqlServerName) sqlAdminLogin=$(sqlAdminLogin) sqlAdminPassword=$(sqlAdminPassword) storageName=$(storageName)
+                        az deployment group create --resource-group $(resourceGroupName) --template-file $env:BUILD_SOURCESDIRECTORY\$(templateFile) --parameters location=$(location) sqlServerName=$(sqlServerName) sqlAdminLogin=$(sqlAdminLogin) sqlAdminPassword=$(sqlAdminPassword) storageName=$(storageName)
 
 
 
