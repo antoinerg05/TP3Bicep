@@ -1,0 +1,39 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "serviceBusNamespaceName": {
+            "value": "tp3-servicebus"
+        },
+        "location": {
+            "value": "canadacentral"
+        },
+        "sku": {
+            "value": "Standard"
+        },
+        "queues": {
+            "value": [
+                {
+                    "name": "decouverts",
+                    "defaultMessageTimeToLive": "P7D",
+                    "maxSizeInMegabytes": 1024
+                },
+                {
+                    "name": "interets",
+                    "defaultMessageTimeToLive": "P1M",
+                    "maxSizeInMegabytes": 512
+                },
+                {
+                    "name": "assurances",
+                    "defaultMessageTimeToLive": "PT12H",
+                    "maxSizeInMegabytes": 512
+                },
+                {
+                    "name": "nouvelleQueue",
+                    "defaultMessageTimeToLive": "P2D",
+                    "maxSizeInMegabytes": 256
+                }
+            ]
+        }
+    }
+}

@@ -42,24 +42,21 @@ stages:
     dependsOn: Deploy_Dev
     condition: succeeded()
     jobs:
-      - deployment: DeployToProd
+      - job: DeployToProd
         displayName: Deploy Resources to Production
         pool:
           vmImage: 'windows-latest'  # Utilise une machine virtuelle Windows
         environment: 'Production'  # Environnement Azure Pipelines
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - task: AzureCLI@2
-                  inputs:
-                    azureSubscription: $(serviceConnection)  # Nom de votre service Azure connecté
-                    scriptType: 'bash'
-                    scriptLocation: 'inlineScript'
-                    inlineScript: |
-                        echo "System.DefaultWorkingDirectory = $(System.DefaultWorkingDirectory)"
-                        az group create --name $(resourceGroupName) --location $(location)
-                        az deployment group create --resource-group $(resourceGroupName)  --template-file $(templateFile) --parameters location=$(location) sqlServerName=$(sqlServerName) sqlAdminLogin=$(sqlAdminLogin) sqlAdminPassword=$(sqlAdminPassword) storageName=$(storageName)
+        steps:
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: $(serviceConnection)  # Nom de votre service Azure connecté
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                  echo "System.DefaultWorkingDirectory = $(System.DefaultWorkingDirectory)"
+                  az group create --name $(resourceGroupName) --location $(location)
+                  az deployment group create --resource-group $(resourceGroupName)  --template-file $(templateFile) --parameters location=$(location) sqlServerName=$(sqlServerName) sqlAdminLogin=$(sqlAdminLogin) sqlAdminPassword=$(sqlAdminPassword) storageName=$(storageName)
 
 
 
