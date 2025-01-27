@@ -50,16 +50,13 @@ stages:
           runOnce:
             deploy:
               steps:
-                - task: Debugpath
-                  script: echo "System.DefaultWorkingDirectory = $(System.DefaultWorkingDirectory)"
-                  displayName: "Debug Working Directory"
-
                 - task: AzureCLI@2
                   inputs:
                     azureSubscription: $(serviceConnection)  # Nom de votre service Azure connecté
                     scriptType: 'bash'
                     scriptLocation: 'inlineScript'
                     inlineScript: |
+                        echo "System.DefaultWorkingDirectory = $(System.DefaultWorkingDirectory)"
                         az group create --name $(resourceGroupName) --location $(location)
                         az deployment group create --resource-group $(resourceGroupName)  --template-file $(System.DefaultWorkingDirectory)\$(templateFile) --parameters location=$(location) sqlServerName=$(sqlServerName) sqlAdminLogin=$(sqlAdminLogin) sqlAdminPassword=$(sqlAdminPassword) storageName=$(storageName)
 
