@@ -15,7 +15,7 @@ variables:
   sqlServerName : 'tp3-sql'
   sqlAdminLogin : 'tp3-admin'
   sqlAdminPassword : 'Nabu123400Coe!!@'
-  storageName: 'storage-tp3-cloud'
+  storageName: 'storagetpcloud'
   
 stages:
   - stage: Deploy_Dev
