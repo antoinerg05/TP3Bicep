@@ -19,12 +19,12 @@ param env string
 var apps = [
     {
         spName: 'tardi1'
-        webApps: ['mvc', 'apiinteret']
+        webApps: ['mvc-${env}', 'apiinteret-${env}']
         miseAEchelle: 'Auto'
     }
     {
         spName: 'tardi2'
-        webApps: [ 'apiassurance', 'apicredit']
+        webApps: [ 'apiassurance-${env}', 'apicredit-${env}']
         miseAEchelle: 'Non'
     }
 ]
@@ -42,7 +42,7 @@ module appService 'modules/appService.bicep' = [ for app in apps: {
     params: {
         location: location
         spName:  '${app.spName}-${env}' 
-        webAppNames: '${app.webApps}-${env}'
+        webAppNames: app.webApps
         spSku: skuMap[app.miseAEchelle]
     }
 }]
