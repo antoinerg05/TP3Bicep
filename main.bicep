@@ -65,7 +65,7 @@ module sqldatabase 'modules/sqldatabase.bicep' = {
 module storageService 'modules/storage.bicep' = {
     name: 'storageService_${storageName}'
      params: {
-         storageName: '${storageName}-${env}'
+         storageName: '${storageName}${env}'
           location: location
           storageSku: 'Standard_ZRS'
      }
