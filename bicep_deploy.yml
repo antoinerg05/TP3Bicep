@@ -14,7 +14,7 @@ variables:
   webAppNameProd : 'webapp-tp3'
   sqlServerName : 'tp3-sql'
   sqlAdminLogin : 'tp3-admin'
-  sqlAdminPassword : 'root'
+  sqlAdminPassword : 'roottp3cloud'
   storageName: 'TP3'
   
 stages:
