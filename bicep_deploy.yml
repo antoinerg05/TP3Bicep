@@ -36,9 +36,6 @@ stages:
                   az group create --name $(resourceGroupName) --location $(location)
                   az deployment group create --resource-group $(resourceGroupName) --template-file $(templateFile) --parameters location=$(location) sqlServerName=$(sqlServerName) sqlAdminLogin=$(sqlAdminLogin) sqlAdminPassword=$(sqlAdminPassword) storageName=$(storageName)
 
-                  param location string
-
-
   - stage: Deploy_Production
     displayName: Deploy to Production Environment
     dependsOn: Deploy_Dev
