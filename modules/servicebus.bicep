@@ -56,6 +56,3 @@ resource queuesResources 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' = [
     enablePartitioning: false
   }
 }]
-
-output namespaceId string = serviceBusNamespace.id
-output queuesIds array = [for queue in queuesResources: queue.id]
