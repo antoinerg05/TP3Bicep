@@ -43,6 +43,7 @@ stages:
                         az --version
                         echo "System.DefaultWorkingDirectory = $(System.DefaultWorkingDirectory)"
                         echo "System.DefaultWorkingDirectory2 = $(System.DefaultWorkingDirectory)"
+                        az role assignment creat --assignee 657c571a-3473-4c0b-9fd4-a7843e50fee7 --role Contributor --scope /subscriptions/6e66f4f4-4e7b-4db9-8db7-3d322fa6313f/resourcegroups/TP3-dev
                         az group create --name $(resourceGroupName)-dev --location $(location)
                         az deployment group create --resource-group $(resourceGroupName)-dev --template-file main.bicep --parameters env=dev location=$(location) sqlServerName=$(sqlServerName) sqlAdminLogin=$(sqlAdminLogin) sqlAdminPassword=$(sqlAdminPassword) storageName=$(storageName)
 
