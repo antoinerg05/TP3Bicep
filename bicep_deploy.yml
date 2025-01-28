@@ -72,7 +72,7 @@ stages:
                     inlineScript: |
                         echo "System.DefaultWorkingDirectory = $(System.DefaultWorkingDirectory)"
                         az group create --name $(resourceGroupName) --location $(location)
-                        az deployment group create --resource-group $(resourceGroupName)  --template-file main.bicep --parameters env=production location=$(location) sqlServerName=$(sqlServerName) sqlAdminLogin=$(sqlAdminLogin) sqlAdminPassword=$(sqlAdminPassword) storageName=$(storageName)
+                        az deployment group create --resource-group $(resourceGroupName)  --template-file main.bicep --parameters env=prod location=$(location) sqlServerName=$(sqlServerName) sqlAdminLogin=$(sqlAdminLogin) sqlAdminPassword=$(sqlAdminPassword) storageName=$(storageName)
 
 
 
