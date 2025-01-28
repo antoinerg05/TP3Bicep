@@ -42,17 +42,13 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' = {
     name: sku
     tier: sku
   }
-  properties: {
-    minimumTlsVersion: '1.2'
-    publicNetworkAccess: 'Enabled'
-  }
 }
 
-resource queuesResources 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' = [for queue in queues: {
-  name: '${serviceBusNamespace.name}/${queue.name}'
-  properties: {
-    defaultMessageTimeToLive: queue.defaultMessageTimeToLive
-    maxSizeInMegabytes: queue.maxSizeInMegabytes
-    enablePartitioning: false
-  }
-}]
+// resource queuesResources 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' = [for queue in queues: {
+//   name: '${serviceBusNamespace.name}/${queue.name}'
+//   properties: {
+//     defaultMessageTimeToLive: queue.defaultMessageTimeToLive
+//     maxSizeInMegabytes: queue.maxSizeInMegabytes
+//     enablePartitioning: false
+//   }
+// }]
