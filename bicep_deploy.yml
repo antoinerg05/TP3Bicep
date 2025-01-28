@@ -43,8 +43,8 @@ stages:
                         az --version
                         echo "System.DefaultWorkingDirectory = $(System.DefaultWorkingDirectory)"
                         echo "System.DefaultWorkingDirectory2 = $(System.DefaultWorkingDirectory)"
-                        az group create --name $(resourceGroupName) --location $(location)
-                        az deployment group create --resource-group $(resourceGroupName) --template-file main.bicep --parameters env=dev location=$(location) sqlServerName=$(sqlServerName) sqlAdminLogin=$(sqlAdminLogin) sqlAdminPassword=$(sqlAdminPassword) storageName=$(storageName)
+                        az group create --name $(resourceGroupName)-dev --location $(location)
+                        az deployment group create --resource-group $(resourceGroupName)-dev --template-file main.bicep --parameters env=dev location=$(location) sqlServerName=$(sqlServerName) sqlAdminLogin=$(sqlAdminLogin) sqlAdminPassword=$(sqlAdminPassword) storageName=$(storageName)
 
   - stage: Deploy_Production
     displayName: Deploy to Production Environment
@@ -71,8 +71,8 @@ stages:
                     scriptLocation: 'inlineScript'
                     inlineScript: |
                         echo "System.DefaultWorkingDirectory = $(System.DefaultWorkingDirectory)"
-                        az group create --name $(resourceGroupName) --location $(location)
-                        az deployment group create --resource-group $(resourceGroupName)  --template-file main.bicep --parameters env=prod location=$(location) sqlServerName=$(sqlServerName) sqlAdminLogin=$(sqlAdminLogin) sqlAdminPassword=$(sqlAdminPassword) storageName=$(storageName)
+                        az group create --name $(resourceGroupName)-prod --location $(location)
+                        az deployment group create --resource-group $(resourceGroupName)-prod  --template-file main.bicep --parameters env=prod location=$(location) sqlServerName=$(sqlServerName) sqlAdminLogin=$(sqlAdminLogin) sqlAdminPassword=$(sqlAdminPassword) storageName=$(storageName)
 
 
 
