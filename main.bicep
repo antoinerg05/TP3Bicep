@@ -70,3 +70,28 @@ module storageService 'modules/storage.bicep' = {
           storageSku: 'Standard_ZRS'
      }
 }
+
+var queues = [
+  {
+    name: 'decouverts-${env}'
+    defaultMessageTimeToLive: 'P7D'
+    maxSizeInMegabytes: 1024
+  }
+  {
+    name: 'interets-${env}'
+    defaultMessageTimeToLive: 'P1M'
+    maxSizeInMegabytes: 512
+  }
+  {
+    name: 'assurances-${env}'
+    defaultMessageTimeToLive: 'PT12H'
+    maxSizeInMegabytes: 512
+  }
+]
+
+module serviceBus 'modules/servicebus.bicep' = {
+    name: 'service_bus_${storageName}'
+     params: {
+         queues: queues
+     }
+}
