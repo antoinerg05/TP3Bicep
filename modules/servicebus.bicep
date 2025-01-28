@@ -36,7 +36,7 @@ param queues array = [
 ]
 
 resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' = {
-  name: serviceBusNamespaceName
+  name: 'ns-${serviceBusNamespaceName}' 
   location: location
   sku: {
     name: sku
