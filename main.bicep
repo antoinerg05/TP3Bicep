@@ -19,7 +19,7 @@ param env string
 var apps = [
     {
         spName: 'tardi1'
-        webApps: ['mvc-${env}', 'api-interet-${env}']
+        webApps: ['mvc-banque-${env}', 'api-interet-${env}']
         miseAEchelle: 'Auto'
     }
     {
