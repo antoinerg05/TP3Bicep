@@ -92,7 +92,7 @@ var queues = [
 module serviceBus 'modules/servicebus.bicep' = {
     name: 'serviceBus_${env}'
      params: {
-          serviceBusNamespaceName: 'service_bus_${env}'
+          serviceBusNamespaceName: 'serviceBus${env}'
           queues: queues
           location: location
      }
