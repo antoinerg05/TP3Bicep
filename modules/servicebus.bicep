@@ -20,7 +20,7 @@ param sku string = 'Standard'
 param queues array
 
 resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' = {
-  name: serviceBusNamespaceName
+  name: '${serviceBusNamespaceName}-${uniqueString(resourceGroup().id)}'
   location: location
   sku: {
     name: sku
