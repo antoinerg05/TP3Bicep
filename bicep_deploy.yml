@@ -43,6 +43,7 @@ stages:
                         az --version
                         echo "System.DefaultWorkingDirectory = $(System.DefaultWorkingDirectory)"
                         echo "System.DefaultWorkingDirectory2 = $(System.DefaultWorkingDirectory)"
+                        az webapp list --query "[?name=='webapp-mvc-prod']" -o table
                         az group create --name $(resourceGroupName)-dev --location $(location)
                         az deployment group create --resource-group $(resourceGroupName)-dev --template-file main.bicep --parameters env=dev location=$(location) sqlServerName=$(sqlServerName) sqlAdminLogin=$(sqlAdminLogin) sqlAdminPassword=$(sqlAdminPassword) storageName=$(storageName)
 
