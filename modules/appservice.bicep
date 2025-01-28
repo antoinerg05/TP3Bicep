@@ -20,7 +20,7 @@ resource servicePlan 'Microsoft.Web/serverfarms@2024-04-01' = {
 }
 
 resource webApp 'Microsoft.Web/sites@2024-04-01' = [for webAppName in webAppNames: {
-  name: 'webapp-${webAppName}-${uniqueString(resourceGroup().id)}'
+  name: 'webapp-${webAppName}'
   location: location
   properties: {
     serverFarmId:servicePlan.id
@@ -28,19 +28,6 @@ resource webApp 'Microsoft.Web/sites@2024-04-01' = [for webAppName in webAppName
   tags:{
     name: 'Application'
     value: webAppName
-  }
-}]
-
-resource stagingSlot 'Microsoft.Web/sites/slots@2024-04-01' = [for i in range(0, length(webAppNames)) : if(spSku == 'S1'){
-  name: '${webApp[i].name}-staging'
-  parent: webApp[i]
-  location: location
-  properties: {
-      serverFarmId:servicePlan.id
-  }
-  tags:{
-    name: 'Application'
-    value: '${webApp[i].name}-staging'
   }
 }]
 
