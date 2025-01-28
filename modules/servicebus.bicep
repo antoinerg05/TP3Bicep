@@ -35,17 +35,17 @@ param queues array = [
   }
 ]
 
-resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' = {
-  name: 'ns-${serviceBusNamespaceName}' 
-  location: location
-  sku: {
-    name: sku
-    tier: sku
-  }
-}
+// resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' = {
+//   name: 'ns-${serviceBusNamespaceName}' 
+//   location: location
+//   sku: {
+//     name: sku
+//     tier: sku
+//   }
+// }
 
 resource queuesResources 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' = [for queue in queues: {
-  name: '${serviceBusNamespace.name}/${queue.name}'
+  name: '${serviceBusNamespaceName}/${queue.name}'
   properties: {
     defaultMessageTimeToLive: queue.defaultMessageTimeToLive
     maxSizeInMegabytes: queue.maxSizeInMegabytes
