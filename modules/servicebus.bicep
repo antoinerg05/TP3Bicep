@@ -44,11 +44,11 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' = {
   }
 }
 
-// resource queuesResources 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' = [for queue in queues: {
-//   name: '${serviceBusNamespace.name}/${queue.name}'
-//   properties: {
-//     defaultMessageTimeToLive: queue.defaultMessageTimeToLive
-//     maxSizeInMegabytes: queue.maxSizeInMegabytes
-//     enablePartitioning: false
-//   }
-// }]
+resource queuesResources 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' = [for queue in queues: {
+  name: '${serviceBusNamespace.name}/${queue.name}'
+  properties: {
+    defaultMessageTimeToLive: queue.defaultMessageTimeToLive
+    maxSizeInMegabytes: queue.maxSizeInMegabytes
+    enablePartitioning: false
+  }
+}]
