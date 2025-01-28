@@ -80,12 +80,12 @@ var queues = [
   {
     name: 'interets-${env}'
     defaultMessageTimeToLive: 'P1M'
-    maxSizeInMegabytes: 512
+    maxSizeInMegabytes: 5120
   }
   {
     name: 'assurances-${env}'
     defaultMessageTimeToLive: 'PT12H'
-    maxSizeInMegabytes: 512
+    maxSizeInMegabytes: 5120
   }
 ]
 
