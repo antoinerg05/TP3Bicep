@@ -94,7 +94,7 @@ module serviceBus 'modules/servicebus.bicep' = {
   params: {
     serviceBusNamespaceName: 'sbServiceBus${env}'
     location: location
-    sku: sku
+    sku: 'Standard'
     queues: queues
   }
 }
