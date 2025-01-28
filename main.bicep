@@ -89,11 +89,12 @@ var queues = [
   }
 ]
 
-// module serviceBus 'modules/servicebus.bicep' = {
-//     name: 'serviceBusNs-${env}'
-//      params: {
-//           serviceBusNamespaceName: 'sbServiceBus${env}'
-//           queues: queues
-//           location: location
-//      }
-// }
+module serviceBus './serviceBusModule.bicep' = {
+  name: 'serviceBusDeployment'
+  params: {
+    serviceBusNamespaceName: 'sbServiceBus${env}'
+    location: location
+    sku: sku
+    queues: queues
+  }
+}
