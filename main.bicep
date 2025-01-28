@@ -38,7 +38,7 @@ var skuMap = {
 var databaseNames = [ 'mvc', 'assurance', 'cartecredits']
 
 module appService 'modules/appService.bicep' = [ for app in apps: {
-    name: 'appService${app.spName}'
+    name: 'appService${app.spName}-${env}'
     params: {
         location: location
         spName:  '${app.spName}-${env}' 
